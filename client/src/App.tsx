@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Button, TextField, Typography, Stack } from "@mui/material";
 import { useComment } from "./hooks/useComment";
 
 function App() {
@@ -12,8 +12,12 @@ function App() {
     commentList,
     getComments,
     deleteComment,
-    // updateComment,
+    updateComment,
     handleEdit,
+    edit,
+    editComment,
+    handleEditEmail,
+    handleEditComment,
   } = useComment();
 
   useEffect(() => {
@@ -21,7 +25,7 @@ function App() {
   }, []);
 
   return (
-    <div className="container">
+    <Box className="container">
       <Typography variant="h2" className="title">
         Leave comments
       </Typography>
@@ -47,13 +51,40 @@ function App() {
 
       {commentList.map((comment) => (
         <Box key={comment.id} className="comment_container">
-          <Typography>{comment.email}</Typography>
-          <Typography>{comment.comment}</Typography>
-          <Button onClick={handleEdit}>Edit</Button>
-          <Button onClick={() => deleteComment(comment.id ?? 0)}>Delete</Button>
+          {edit && editComment.id === comment.id ? (
+            <Stack>
+              <TextField
+                className="input_data"
+                label="Email"
+                value={editComment.email}
+                onChange={(event) => handleEditEmail(event.target.value)}
+              />
+              <TextField
+                className="input_data"
+                label="Add a comment"
+                multiline
+                rows={3}
+                value={editComment.comment}
+                onChange={(event) => handleEditComment(event.target.value)}
+              />
+              <Button onClick={() => handleEdit(comment)}>Cancel</Button>
+              <Button onClick={() => updateComment(editComment)}>
+                Save
+              </Button>
+            </Stack>
+          ) : (
+            <>
+              <Typography>{comment.email}</Typography>
+              <Typography>{comment.comment}</Typography>
+              <Button onClick={() => handleEdit(comment)}>Edit</Button>
+              <Button onClick={() => deleteComment(comment.id ?? 0)}>
+                Delete
+              </Button>
+            </>
+          )}
         </Box>
       ))}
-    </div>
+    </Box>
   );
 }
 // ivan.fuentes@densitylabs.io
