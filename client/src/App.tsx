@@ -37,6 +37,7 @@ function App() {
           <TextField
             className="input_data"
             label="Email"
+            color="warning"
             value={comment.email}
             error={error && comment.email.length === 0}
             helperText={
@@ -64,21 +65,23 @@ function App() {
           <Box key={comment.id} className="comment_container">
             {edit && editComment.id === comment.id ? (
               <>
-                <TextField
-                  className="input_data"
-                  label="Email"
-                  value={editComment.email}
-                  size="small"
-                  onChange={(event) => handleEditEmail(event.target.value)}
-                />
-                <TextField
-                  className="input_data"
-                  label="Add a comment"
-                  value={editComment.comment}
-                  multiline
-                  rows={3}
-                  onChange={(event) => handleEditComment(event.target.value)}
-                />
+                <Box className="edit">
+                  <TextField
+                    className="input_data"
+                    label="Email"
+                    value={editComment.email}
+                    size="small"
+                    onChange={(event) => handleEditEmail(event.target.value)}
+                  />
+                  <TextField
+                    className="input_data"
+                    label="Comment"
+                    value={editComment.comment}
+                    multiline
+                    rows={3}
+                    onChange={(event) => handleEditComment(event.target.value)}
+                  />
+                </Box>
                 <Button onClick={() => handleEdit(comment)}>Cancel</Button>
                 <Button onClick={() => updateComment(editComment)}>Save</Button>
               </>

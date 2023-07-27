@@ -13,9 +13,16 @@ export const useComment = () => {
   const [edit, setEdit] = useState(false);
   const [error, setError] = useState(false);
 
+  const toastStyle = {
+    style: {
+      borderRadius: "10px",
+      background: "#333",
+      color: "#fff",
+    },
+  }
   const createComment = async () => {
     if (comment.email === "" || comment.comment === "") {
-      toast.error("Make sure to fill in the fields");
+      toast.error("Make sure to fill in the fields", toastStyle);
       setError(true);
     } else {
       try {
@@ -26,9 +33,9 @@ export const useComment = () => {
         setCommentList([...commentList, result.data]);
         setComment({ email: "", comment: "" });
         setError(false);
-        toast.success("Comment has been created");
+        toast.success("Comment has been created", toastStyle );
       } catch (error) {
-        toast.error("Something went wrong");
+        toast.error("Something went wrong", toastStyle);
         console.error(error);
       }
     }
@@ -39,7 +46,7 @@ export const useComment = () => {
       const result = await axios.get("http://localhost:3000/comments");
       setCommentList(result.data);
     } catch (error) {
-      toast.error('Something went wrong')
+      toast.error("Something went wrong", toastStyle);
       console.error(error);
     }
   };
@@ -48,9 +55,9 @@ export const useComment = () => {
     try {
       await axios.delete(`http://localhost:3000/comment/${id}`);
       setCommentList(commentList.filter((comment) => comment.id !== id));
-      toast.success("Comment has been deleted");
+      toast.success("Comment has been deleted", toastStyle);
     } catch (error) {
-      toast.error('Something went wrong')
+      toast.error("Something went wrong", toastStyle);
       console.error(error);
     }
   };
@@ -70,8 +77,9 @@ export const useComment = () => {
         })
       );
       setEdit(false);
+      toast.success("Comment has been edited", toastStyle);
     } catch (error) {
-      toast.error('Something went wrong')
+      toast.error("Something went wrong", toastStyle);
       console.error(error);
     }
   };
