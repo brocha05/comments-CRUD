@@ -1,6 +1,7 @@
 import axios from "axios";
 import { useState } from "react";
 import { Comment } from "../types/comment";
+import { toast } from "react-hot-toast";
 
 export const useComment = () => {
   const [comment, setComment] = useState<Comment>({ email: "", comment: "" });
@@ -10,14 +11,26 @@ export const useComment = () => {
   });
   const [commentList, setCommentList] = useState<Comment[]>([]);
   const [edit, setEdit] = useState(false);
+  const [error, setError] = useState(false);
 
   const createComment = async () => {
-    try {
-      await axios.post("http://localhost:3000/comment", comment);
-      setCommentList([...commentList, comment]);
-      setComment({ email: "", comment: "" });
-    } catch (error) {
-      console.error(error);
+    if (comment.email === "" || comment.comment === "") {
+      toast.error("Make sure to fill in the fields");
+      setError(true);
+    } else {
+      try {
+        const result = await axios.post(
+          "http://localhost:3000/comment",
+          comment
+        );
+        setCommentList([...commentList, result.data]);
+        setComment({ email: "", comment: "" });
+        setError(false);
+        toast.success("Comment has been created");
+      } catch (error) {
+        toast.error("Something went wrong");
+        console.error(error);
+      }
     }
   };
 
@@ -26,6 +39,7 @@ export const useComment = () => {
       const result = await axios.get("http://localhost:3000/comments");
       setCommentList(result.data);
     } catch (error) {
+      toast.error('Something went wrong')
       console.error(error);
     }
   };
@@ -34,7 +48,9 @@ export const useComment = () => {
     try {
       await axios.delete(`http://localhost:3000/comment/${id}`);
       setCommentList(commentList.filter((comment) => comment.id !== id));
+      toast.success("Comment has been deleted");
     } catch (error) {
+      toast.error('Something went wrong')
       console.error(error);
     }
   };
@@ -42,7 +58,8 @@ export const useComment = () => {
   const updateComment = async (comment: Comment) => {
     try {
       await axios.put(`http://localhost:3000/comment/${comment.id}`, comment);
-      setCommentList(commentList.map((comentario) => {
+      setCommentList(
+        commentList.map((comentario) => {
           if (comentario.id === comment.id) {
             return {
               ...comentario,
@@ -52,10 +69,9 @@ export const useComment = () => {
           return comentario;
         })
       );
-
-      getComments();
       setEdit(false);
     } catch (error) {
+      toast.error('Something went wrong')
       console.error(error);
     }
   };
@@ -95,5 +111,6 @@ export const useComment = () => {
     editComment,
     handleEditEmail,
     handleEditComment,
+    error,
   };
 };
