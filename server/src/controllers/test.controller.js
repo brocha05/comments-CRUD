@@ -1,7 +1,6 @@
 const db = require("../db");
 
 const createComment = async (req, res, next) => {
-  console.log(req.body);
   const { email, comment } = req.body;
 
   try {
@@ -26,14 +25,14 @@ const getComments = async (req, res, next) => {
 
 const updateComment = async (req, res, next) => {
   const { email, comment } = req.body;
-  const {id} = req.params;
+  const { id } = req.params;
 
   try {
     const result = await db.query(
       "UPDATE comments SET email = $1, comment = $2 WHERE id = $3 RETURNING *",
       [email, comment, id]
     );
-    res.json(result.rows[0])
+    res.json(result.rows[0]);
   } catch (error) {
     next(error);
   }
@@ -46,7 +45,7 @@ const deleteComment = async (req, res, next) => {
     await db.query("DELETE FROM comments WHERE id = $1", [id]);
     res.json({ message: "Borrado con éxito" });
   } catch (error) {
-    next(error)
+    next(error);
   }
 };
 
