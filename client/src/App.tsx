@@ -1,8 +1,11 @@
 /* eslint-disable react-hooks/exhaustive-deps */
 import { useEffect } from "react";
 import { useComment } from "./hooks/useComment";
-import { Box, Button, TextField, Typography } from "@mui/material";
+import { Box, Typography } from "@mui/material";
 import { Toaster } from "react-hot-toast";
+import { Form } from "./components/Form";
+import { Comment } from "./components/Comment";
+import { EditComment } from "./components/EditComment";
 
 function App() {
   const {
@@ -33,67 +36,34 @@ function App() {
         <Typography variant="h2" className="title">
           Leave comments
         </Typography>
-        <Box className="form_container">
-          <TextField
-            className="input_data"
-            label="Email"
-            color="warning"
-            value={comment.email}
-            error={error && comment.email.length === 0}
-            helperText={
-              error && comment.email.length === 0 ? "Email is required" : ""
-            }
-            onChange={(event) => handleEmailChange(event.target.value)}
-          />
-          <TextField
-            className="input_data"
-            label="Add a comment"
-            multiline
-            rows={3}
-            value={comment.comment}
-            error={error && comment.comment.length === 0}
-            helperText={
-              error && comment.comment.length === 0 ? "Comment is required" : ""
-            }
-            onChange={(event) => handleCommentChange(event.target.value)}
-          />
-          <Button variant="contained" onClick={createComment}>
-            Comment
-          </Button>
-        </Box>
+        <Form
+          comment={comment}
+          error={error}
+          handleEmailChange={handleEmailChange}
+          handleCommentChange={handleCommentChange}
+          createComment={createComment}
+        />
         {commentList.map((comment) => (
           <Box key={comment.id} className="comment_container">
             {edit && editComment.id === comment.id ? (
-              <>
-                <Box className="edit">
-                  <TextField
-                    className="input_data"
-                    label="Email"
-                    value={editComment.email}
-                    size="small"
-                    onChange={(event) => handleEditEmail(event.target.value)}
-                  />
-                  <TextField
-                    className="input_data"
-                    label="Comment"
-                    value={editComment.comment}
-                    multiline
-                    rows={3}
-                    onChange={(event) => handleEditComment(event.target.value)}
-                  />
-                </Box>
-                <Button onClick={() => handleEdit(comment)}>Cancel</Button>
-                <Button onClick={() => updateComment(editComment)}>Save</Button>
-              </>
+              <EditComment
+                email={editComment.email}
+                commentary={editComment.comment}
+                comment={comment}
+                editComment={editComment}
+                handleEditEmail={handleEditEmail}
+                handleEditComment={handleEditComment}
+                handleEdit={handleEdit}
+                updateComment={updateComment}
+              />
             ) : (
-              <>
-                <Typography>{comment.email}</Typography>
-                <Typography>{comment.comment}</Typography>
-                <Button onClick={() => handleEdit(comment)}>Edit</Button>
-                <Button onClick={() => deleteComment(comment.id ?? 0)}>
-                  Delete
-                </Button>
-              </>
+              <Comment
+                email={comment.email}
+                commentary={comment.comment}
+                comment={comment}
+                handleEdit={handleEdit}
+                deleteComment={deleteComment}
+              />
             )}
           </Box>
         ))}
@@ -101,5 +71,5 @@ function App() {
     </>
   );
 }
-// ivan.fuentes@densitylabs.io
+
 export default App;
