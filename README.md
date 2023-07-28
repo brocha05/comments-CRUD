@@ -50,4 +50,7 @@ DB_PASSWORD=tu_contraseña
 
 4. Luego, en el archivo `config.js` que se encuentra en la carpeta `src`, ajusta el valor de las variables para que se utilicen las credenciales del archivo `.env`.
 
+## Crea tu base de datos y la tabla que necesitarás
+1. En la carpeta `server` existe una carpeta llamada `database` en ella viene un archivo que contiene los comandos SQL que deberás ejecutar para tener la base de datos y tablas que necesitarás para que funcione, ejecutalos y listo.
+
 ## ¡Listo para probar el proyecto!
